@@ -13,6 +13,12 @@
 		FED4F7671AF71F5B00699B89 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7661AF71F5B00699B89 /* Store.swift */; };
 		FED4F7691AF729D600699B89 /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7681AF729D600699B89 /* StoreTests.swift */; };
 		FED4F76A1AF744FC00699B89 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7661AF71F5B00699B89 /* Store.swift */; };
+		FED4F76C1AF8572100699B89 /* Getter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F76B1AF8572100699B89 /* Getter.swift */; };
+		FED4F76D1AF8572100699B89 /* Getter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F76B1AF8572100699B89 /* Getter.swift */; };
+		FED4F79F1AF8807C00699B89 /* Evaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F79E1AF8807C00699B89 /* Evaluator.swift */; };
+		FED4F7A01AF8807C00699B89 /* Evaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F79E1AF8807C00699B89 /* Evaluator.swift */; };
+		FED4F7A21AF8838300699B89 /* Immutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7A11AF8838300699B89 /* Immutable.swift */; };
+		FED4F7A31AF8838300699B89 /* Immutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7A11AF8838300699B89 /* Immutable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +40,9 @@
 		FED4F75C1AF71E1900699B89 /* NuclearTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuclearTests.swift; sourceTree = "<group>"; };
 		FED4F7661AF71F5B00699B89 /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		FED4F7681AF729D600699B89 /* StoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
+		FED4F76B1AF8572100699B89 /* Getter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Getter.swift; sourceTree = "<group>"; };
+		FED4F79E1AF8807C00699B89 /* Evaluator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Evaluator.swift; sourceTree = "<group>"; };
+		FED4F7A11AF8838300699B89 /* Immutable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Immutable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +88,9 @@
 				FED4F74F1AF71E1900699B89 /* Nuclear.h */,
 				FED4F74D1AF71E1900699B89 /* Supporting Files */,
 				FED4F7661AF71F5B00699B89 /* Store.swift */,
+				FED4F76B1AF8572100699B89 /* Getter.swift */,
+				FED4F79E1AF8807C00699B89 /* Evaluator.swift */,
+				FED4F7A11AF8838300699B89 /* Immutable.swift */,
 			);
 			path = Nuclear;
 			sourceTree = "<group>";
@@ -216,7 +228,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FED4F76C1AF8572100699B89 /* Getter.swift in Sources */,
 				FED4F7671AF71F5B00699B89 /* Store.swift in Sources */,
+				FED4F7A21AF8838300699B89 /* Immutable.swift in Sources */,
+				FED4F79F1AF8807C00699B89 /* Evaluator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,8 +239,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FED4F7A01AF8807C00699B89 /* Evaluator.swift in Sources */,
 				FED4F76A1AF744FC00699B89 /* Store.swift in Sources */,
 				FED4F75D1AF71E1900699B89 /* NuclearTests.swift in Sources */,
+				FED4F76D1AF8572100699B89 /* Getter.swift in Sources */,
+				FED4F7A31AF8838300699B89 /* Immutable.swift in Sources */,
 				FED4F7691AF729D600699B89 /* StoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

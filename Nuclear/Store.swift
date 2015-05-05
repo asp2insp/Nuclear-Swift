@@ -12,11 +12,9 @@ import Foundation
 // taken on the whole system.  They manage their own section of the entire app state
 // and have no knowledge about the other parts of the application state.
 public class Store {
-    // A store represents its state by one large, nested dictionary
-    typealias State = [String : AnyObject]
     // A handler takes the current state, a payload, and an action and
     // returns a modified state.
-    typealias Handler = (State, Any, String) -> State
+    typealias Handler = (Immutable.State, Any, String) -> Immutable.State
     
     private var handlers : [String : Handler] = [:]
     
@@ -31,13 +29,13 @@ public class Store {
     }
     
     // Overridable method to get the initial state for this type of store
-    func getInitialState() -> State {
-        return [:]
+    func getInitialState() -> Immutable.State {
+        return Immutable.State.Value(nil)
     }
     
     // Takes a current state, action type, and payload, does the reaction,
     // and returns the new state
-    func handle(state : State, action: String, payload: Any) -> State {
+    func handle(state : Immutable.State, action: String, payload: Any) -> Immutable.State {
         if let handler = handlers[action] {
             return handler(state, payload, action)
         }
@@ -46,7 +44,7 @@ public class Store {
     
     // Pure function which takes the current state and returns a new state
     // after the reset. May be overriden
-    func handleReset(state: State) -> State {
+    func handleReset(state: Immutable.State) -> Immutable.State {
         return self.getInitialState()
     }
     
@@ -55,9 +53,4 @@ public class Store {
     func on(action: String, handler: Handler) {
         handlers[action] = handler
     }
-}
-
-// States are compared by reference since they are treated as immutable
-func ==(lhs: Store.State, rhs: Store.State) -> Bool {
-    return unsafeAddressOf(lhs).hashValue == unsafeAddressOf(rhs).hashValue
 }
