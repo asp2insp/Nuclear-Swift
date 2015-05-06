@@ -23,11 +23,11 @@ class StoreTests: XCTestCase {
             self.on("addExperiments", handler: {(state, payload, action) in
                 var newState = state
                 if let experiments = payload as? [Immutable.State] {
-                    var targetExperiments = Immutable.getIn(newState, keyPath: ["experiments"] as [SimpleDep]) as! [Immutable.State]
+                    var targetExperiments = Immutable.getIn(newState, keyPath: ["experiments"]) as! [Immutable.State]
                     for exp in experiments {
                         targetExperiments.append(exp)
                     }
-                    newState.updateValue(targetExperiments, forKey: "experiments")
+                    newState = Immutable.updateIn(newState, forKey: "experiments", withValue: targetExperiments)
                 }
                 return newState
             })

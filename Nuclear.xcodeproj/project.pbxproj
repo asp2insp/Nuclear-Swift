@@ -19,6 +19,7 @@
 		FED4F7A01AF8807C00699B89 /* Evaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F79E1AF8807C00699B89 /* Evaluator.swift */; };
 		FED4F7A21AF8838300699B89 /* Immutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7A11AF8838300699B89 /* Immutable.swift */; };
 		FED4F7A31AF8838300699B89 /* Immutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7A11AF8838300699B89 /* Immutable.swift */; };
+		FED4F7A61AF9274E00699B89 /* ImmutableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7A41AF9274E00699B89 /* ImmutableTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,7 @@
 		FED4F76B1AF8572100699B89 /* Getter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Getter.swift; sourceTree = "<group>"; };
 		FED4F79E1AF8807C00699B89 /* Evaluator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Evaluator.swift; sourceTree = "<group>"; };
 		FED4F7A11AF8838300699B89 /* Immutable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Immutable.swift; sourceTree = "<group>"; };
+		FED4F7A41AF9274E00699B89 /* ImmutableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImmutableTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				FED4F75C1AF71E1900699B89 /* NuclearTests.swift */,
 				FED4F75A1AF71E1900699B89 /* Supporting Files */,
 				FED4F7681AF729D600699B89 /* StoreTests.swift */,
+				FED4F7A41AF9274E00699B89 /* ImmutableTests.swift */,
 			);
 			path = NuclearTests;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 				FED4F76D1AF8572100699B89 /* Getter.swift in Sources */,
 				FED4F7A31AF8838300699B89 /* Immutable.swift in Sources */,
 				FED4F7691AF729D600699B89 /* StoreTests.swift in Sources */,
+				FED4F7A61AF9274E00699B89 /* ImmutableTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
