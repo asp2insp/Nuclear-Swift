@@ -84,7 +84,9 @@ public class Immutable {
         return [:]
     }
     
-    public static func getIn(state: State, keyPath: [Any]) -> State? {
+    // Get the value along the given keypath or return None if the value
+    // does not exist
+    public static func getIn(state: State, keyPath: [Any]) -> State {
         if keyPath.count == 0 {
             return state
         }
@@ -94,21 +96,25 @@ public class Immutable {
             if let index = key as? Int {
                 return getIn(array[index], keyPath: Array(dropFirst(keyPath)))
             } else {
-                return nil
+                return .None
             }
         case let .Map(map, tag):
             if let name = key as? String {
-                return getIn(map[name]!, keyPath: Array(dropFirst(keyPath))) ?? nil
+                return getIn(map[name]!, keyPath: Array(dropFirst(keyPath))) ?? .None
             } else {
-                return nil
+                return .None
             }
         default:
-            return nil
+            return .None
         }
     }
     
-    public static func setIn(state: State, forKeyPath: [Any], withValue: Any) -> State? {
-            }
+    // Set or create the given value at the given keypath. Returns the modified state.
+    public static func setIn(state: State, forKeyPath: [Any], withValue: State?) -> State {
+        return mutateIn(state, atKeyPath: forKeyPath, mutator: {(state) in
+            return withValue ?? State.None
+        })
+    }
     
     
     // Recurse down to the key at the given path (creating the path if necessary), and
@@ -198,6 +204,10 @@ extension Immutable.State {
     
     func getIn(keyPath: [Any]) -> Immutable.State? {
         return Immutable.getIn(self, keyPath: keyPath)
+    }
+    
+    func setIn(keyPath: [Any], withValue: Immutable.State?) -> Immutable.State {
+        return Immutable.setIn(self, forKeyPath: keyPath, withValue: withValue)
     }
 }
 
