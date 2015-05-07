@@ -27,19 +27,71 @@ class ImmutableTests: XCTestCase {
     }
 
     // Test deep conversion to state
-    func testToState() {
+    func testDeepNestedToState() {
         let a = ["shopping_cart": ["items": ["eggs", "milk"], "total": 5]]
         let stateRep = Immutable.toState(a)
         
-        let expected = "(Map {shopping_cart : (Map {items : (Array [(Value : 1), (Value : 2)] : 3)} : 4)} : 5)"
+        let expected = "(Map {shopping_cart : (Map {items : (Array [(Value), (Value)]), total : (Value)})})"
+        
+        XCTAssertEqual(expected, stateRep.description(), "")
+    }
+    
+    // Test simple conversion to state
+    func testValueToState() {
+        let a = 5
+        let stateRep = Immutable.toState(a)
+        
+        XCTAssertEqual( "(Value)", stateRep.description(), "")
+        let b = "hello"
+        let stateRep2 = Immutable.toState(b)
+        
+        XCTAssertEqual("(Value)", stateRep2.description(), "")
+    }
+    
+    // Test deep conversion to state
+    func testMapToState() {
+        let a = ["total": 5]
+        let stateRep = Immutable.toState(a)
+        
+        let expected = "(Map {total : (Value)})"
+        
+        XCTAssertEqual(expected, stateRep.description(), "")
+    }
+    
+    // Test deep conversion to state
+    func testArrayToState() {
+        let a = ["eggs", "milk"]
+        let stateRep = Immutable.toState(a)
+        
+        let expected = "(Array [(Value), (Value)])"
+        
+        XCTAssertEqual(expected, stateRep.description(), "")
+    }
+    
+    // Test helper functions that convert to state
+    func testConvertArray() {
+        let a = ["eggs", "milk", 45]
+        let stateRep = Immutable.State.Array(Immutable.convertArray(a), 4)
+        
+        let expected = "(Array [(Value), (Value), (Value)])"
+        
+        XCTAssertEqual(expected, stateRep.description(), "")
+    }
+    
+    // Test helper functions that convert to state
+    func testConvertMap() {
+        let a = ["eggs":10, "milk":"one"]
+        let stateRep = Immutable.State.Map(Immutable.convertMap(a), 3)
+        
+        let expected = "(Map {eggs : (Value), milk : (Value)})"
         
         XCTAssertEqual(expected, stateRep.description(), "")
     }
     
     // Ensure that our to string works since we'll be basing everything else on it
     func testDescription() {
-        XCTAssertEqual("(Value : 1)", Immutable.State.Value(3, 1).description(), "")
-        XCTAssertEqual("(Array [(Value : 1)] : 2)", Immutable.State.Array([Immutable.State.Value(3, 1)], 2).description(), "")
-        XCTAssertEqual("(Map {hello : (Value : 1)} : 2)", Immutable.State.Map(["hello":Immutable.State.Value(3, 1)], 2).description(), "")
+        XCTAssertEqual("(Value)", Immutable.State.Value(3, 1).description(), "")
+        XCTAssertEqual("(Array [(Value)])", Immutable.State.Array([Immutable.State.Value(3, 1)], 2).description(), "")
+        XCTAssertEqual("(Map {hello : (Value)})", Immutable.State.Map(["hello":Immutable.State.Value(3, 1)], 2).description(), "")
     }
 }

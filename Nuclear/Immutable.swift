@@ -17,7 +17,7 @@ public class Immutable {
             if val == UInt.max {
                 fatalError("RAN OUT OF IDS")
             }
-            return val++
+            return ++val
         }
     }
     
@@ -45,25 +45,25 @@ public class Immutable {
         }
     }
     
-    
-    public static func toState(x: Any) -> State {
+    // Convert a native swift nested object to a nested immutable state
+    public static func toState(x: AnyObject) -> State {
         switch x {
-        case let someArray as [Any]:
+        case let someArray as [AnyObject]:
             return State.Array(convertArray(someArray), Tag.nextTag())
-        case let someMap as [String:Any]:
+        case let someMap as [String:AnyObject]:
             return State.Map(convertMap(someMap), Tag.nextTag())
         default:
             return State.Value(x, Tag.nextTag())
         }
     }
     
-    static func convertArray(array: [Any]) -> [State] {
-        return array.map({(x: Any) -> State in
+    static func convertArray(array: [AnyObject]) -> [State] {
+        return array.map({(x: AnyObject) -> State in
             return self.toState(x)
         })
     }
     
-    static func convertMap(map: [String:Any]) -> [String:State] {
+    static func convertMap(map: [String:AnyObject]) -> [String:State] {
         var asState : [String:State] = [:]
         for (key, val) in map {
             asState[key] = toState(val)
@@ -196,6 +196,7 @@ public class Immutable {
         fatalError("Your keypath contains something other than strings and integer indices")
     }
     
+    // Generate a new tag for the state to mark it as changed
     static func markAsDirty(state: State) -> State {
         switch state {
         case .Value(let a, let tag):
@@ -223,18 +224,20 @@ extension Immutable.State {
         return Immutable.setIn(self, forKeyPath: keyPath, withValue: withValue)
     }
     
+    // Allow us to print the state for debugging
     func description() -> String {
         switch self {
         case .Value(let v, let tag):
-            return "(Value : \(tag))"
+            return "(Value)"
         case .None:
             return "(None)"
-        case .Array(let array, let tag):
+        case .Array(let array, _):
+            let last = array.last!
             let recursive = array.reduce("", combine: { (sum, item) -> String in
-                let maybeComma = (item === array.last!) ? "" : ", "
+                let maybeComma = (item === last) ? "" : ", "
                 return "\(sum)\(item.description())\(maybeComma)"
             })
-            return "(Array [\(recursive)] : \(tag))"
+            return "(Array [\(recursive)])"
         case .Map(let map, let tag):
             var inner = "(Map {"
             let last = map.count
@@ -243,17 +246,22 @@ extension Immutable.State {
                 let maybeComma = (++i == last) ? "" : ", "
                 inner = "\(inner)\(key) : \(state.description())\(maybeComma)"
             }
-            return "\(inner)} : \(tag))"
+            return "\(inner)})"
         }
     }
 }
 
 func ===(a: Immutable.State, b: Immutable.State) -> Bool {
     switch (a, b) {
-    case (.Value(let v1, let aTag), .Value(let v2, let bTag)) where aTag == bTag: return true
-    case (.Map(  let v1, let aTag), .Map(  let v2, let bTag)) where aTag == bTag: return true
-    case (.Array(let v1, let aTag), .Array(let v2, let bTag)) where aTag == bTag: return true
-    case (.None                   , .None)                                      : return true
-    default: return false
+    case (.Value(_, let aTag), .Value(_, let bTag)):
+        return aTag == bTag
+    case (.Map(_, let aTag), .Map(_, let bTag)):
+        return aTag == bTag
+    case (.Array(_, let aTag), .Array(_, let bTag)):
+        return aTag == bTag
+    case (.None, .None):
+        return true
+    default:
+        return false
     }
 }
