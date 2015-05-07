@@ -30,7 +30,7 @@ public class Store {
     
     // Overridable method to get the initial state for this type of store
     func getInitialState() -> Immutable.State {
-        return Immutable.State.Value(nil, -1)
+        return Immutable.State.None
     }
     
     // Takes a current state, action type, and payload, does the reaction,

@@ -30,6 +30,19 @@ public class Immutable {
         case Map([String:State], UInt)
         case Value(Any?, UInt)
         case None
+        
+        var hashValue : Int {
+            switch self {
+            case .Array(let _, let tag):
+                return Int(tag)
+            case .Map(let _, let tag):
+                return Int(tag)
+            case .Value(let _, let tag):
+                return Int(tag)
+            case .None:
+                return 0
+            }
+        }
     }
     
     
@@ -209,13 +222,38 @@ extension Immutable.State {
     func setIn(keyPath: [Any], withValue: Immutable.State?) -> Immutable.State {
         return Immutable.setIn(self, forKeyPath: keyPath, withValue: withValue)
     }
+    
+    func description() -> String {
+        switch self {
+        case .Value(let v, let tag):
+            return "(Value : \(tag))"
+        case .None:
+            return "(None)"
+        case .Array(let array, let tag):
+            let recursive = array.reduce("", combine: { (sum, item) -> String in
+                let maybeComma = (item === array.last!) ? "" : ", "
+                return "\(sum)\(item.description())\(maybeComma)"
+            })
+            return "(Array [\(recursive)] : \(tag))"
+        case .Map(let map, let tag):
+            var inner = "(Map {"
+            let last = map.count
+            var i = 0
+            for (key,state) in map {
+                let maybeComma = (++i == last) ? "" : ", "
+                inner = "\(inner)\(key) : \(state.description())\(maybeComma)"
+            }
+            return "\(inner)} : \(tag))"
+        }
+    }
 }
 
 func ===(a: Immutable.State, b: Immutable.State) -> Bool {
     switch (a, b) {
-    case (.Value(let a, let aTag), .Value(let b, let bTag)) where aTag == bTag: return true
-    case (.Map(  let a, let aTag), .Map(  let b, let bTag)) where aTag == bTag: return true
-    case (.Array(let a, let aTag), .Array(let b, let bTag)) where aTag == bTag: return true
+    case (.Value(let v1, let aTag), .Value(let v2, let bTag)) where aTag == bTag: return true
+    case (.Map(  let v1, let aTag), .Map(  let v2, let bTag)) where aTag == bTag: return true
+    case (.Array(let v1, let aTag), .Array(let v2, let bTag)) where aTag == bTag: return true
+    case (.None                   , .None)                                      : return true
     default: return false
     }
 }
