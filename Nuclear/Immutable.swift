@@ -149,7 +149,7 @@ public class Immutable {
         let rest = Array(dropFirst(atKeyPath))
         switch state {
         case .None: // Create the rest of the keypath
-            return createIn(rest, generator: mutator)
+            return createIn(atKeyPath, generator: mutator)
         case .Some(let someState):
             switch someState {
             case var .Array(array, tag):

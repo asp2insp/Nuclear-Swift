@@ -15,6 +15,20 @@ class ImmutableTests: XCTestCase {
         super.setUp()
     }
     
+    
+    // Test mutators
+    func testSetIn() {
+        var state = Immutable.toState([:])
+        state = state.setIn(["a", 0, "b"], withValue: Immutable.toState("Hello!"))
+        XCTAssertEqual("(Map {a : (Array [(Map {b : (Value)})])})", state.description(), "")
+        XCTAssertEqual("Hello!", Immutable.fromState(state.getIn(["a", 0, "b"])) as! String, "")
+        
+        // Test auto increment
+        state = state.setIn(["a", 5], withValue: Immutable.toState(75))
+        XCTAssertEqual("(Map {a : (Array [(Map {b : (Value)}), (None), (None), (None), (None), (Value)])})", state.description(), "")
+        XCTAssertEqual(75, Immutable.fromState(state.getIn(["a", 5])) as! Int, "")
+    }
+    
     // Test helper functions that convert back from state
     func testFromStateNested() {
         let state = Immutable.toState(["shopping_cart": ["items": ["eggs", "milk"], "total": 5]])
