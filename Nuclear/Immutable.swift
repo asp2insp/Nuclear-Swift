@@ -28,7 +28,7 @@ public class Immutable {
     public enum State {
         case Array([State], UInt)
         case Map([String:State], UInt)
-        case Value(Any?, UInt)
+        case Value(AnyObject?, UInt)
         case None
         
         var hashValue : Int {
@@ -89,21 +89,27 @@ public class Immutable {
         }
     }
     
-    public static func convertArrayBack(array: [State]) -> [Any] {
-        return []
+    public static func convertArrayBack(array: [State]) -> [Any?] {
+        return array.map({(state) in
+            return self.fromState(state)
+        })
     }
     
-    public static func convertMapBack(map: [String:State]) -> [String:Any] {
-        return [:]
+    public static func convertMapBack(map: [String:State]) -> [String:Any?] {
+        var newMap : [String:Any?] = [:]
+        for (key, state) in map {
+            newMap[key] = fromState(state)
+        }
+        return newMap
     }
     
     // Get the value along the given keypath or return None if the value
     // does not exist
-    public static func getIn(state: State, keyPath: [Any]) -> State {
+    public static func getIn(state: State, keyPath: [AnyObject]) -> State {
         if keyPath.count == 0 {
             return state
         }
-        let key = keyPath[0]
+        let key : AnyObject = keyPath[0]
         switch state {
         case let .Array(array, tag):
             if let index = key as? Int {
@@ -123,7 +129,7 @@ public class Immutable {
     }
     
     // Set or create the given value at the given keypath. Returns the modified state.
-    public static func setIn(state: State, forKeyPath: [Any], withValue: State?) -> State {
+    public static func setIn(state: State, forKeyPath: [AnyObject], withValue: State?) -> State {
         return mutateIn(state, atKeyPath: forKeyPath, mutator: {(state) in
             return withValue ?? State.None
         })
@@ -133,13 +139,13 @@ public class Immutable {
     // Recurse down to the key at the given path (creating the path if necessary), and
     // return the mutated state will all nodes along the given key path marked as having been
     // updated
-    static func mutateIn(state: State?, atKeyPath: [Any], mutator: (State?) -> State) -> State {
+    static func mutateIn(state: State?, atKeyPath: [AnyObject], mutator: (State?) -> State) -> State {
         if atKeyPath.count == 0 {
             // Apply the mutation, and mark the node as modified by updating the tag
             return markAsDirty(mutator(state))
         }
 
-        let key = first(atKeyPath)
+        let key : AnyObject = first(atKeyPath)!
         let rest = Array(dropFirst(atKeyPath))
         switch state {
         case .None: // Create the rest of the keypath
@@ -174,12 +180,12 @@ public class Immutable {
     }
     
     // Create the state hierarchy that matches the keypath.
-    static func createIn(keyPath: [Any], generator: (State?) -> State) -> State {
+    static func createIn(keyPath: [AnyObject], generator: (State?) -> State) -> State {
         if keyPath.count == 0 {
             // Apply the mutation, and mark the node as modified by updating the tag
             return markAsDirty(generator(nil))
         }
-        let key = first(keyPath)
+        let key : AnyObject = first(keyPath)!
         let rest = Array(dropFirst(keyPath))
         if let index = key as? Int {
             var array : [State] = []
@@ -212,15 +218,15 @@ public class Immutable {
 }
 
 extension Immutable.State {
-    func toSwift() -> Any {
+    func toSwift() -> Any? {
         return Immutable.fromState(self)
     }
     
-    func getIn(keyPath: [Any]) -> Immutable.State? {
+    func getIn(keyPath: [AnyObject]) -> Immutable.State? {
         return Immutable.getIn(self, keyPath: keyPath)
     }
     
-    func setIn(keyPath: [Any], withValue: Immutable.State?) -> Immutable.State {
+    func setIn(keyPath: [AnyObject], withValue: Immutable.State?) -> Immutable.State {
         return Immutable.setIn(self, forKeyPath: keyPath, withValue: withValue)
     }
     

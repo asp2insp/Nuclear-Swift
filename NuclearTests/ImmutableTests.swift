@@ -15,6 +15,34 @@ class ImmutableTests: XCTestCase {
         super.setUp()
     }
     
+    // Test helper functions that convert back from state
+    func testFromStateNested() {
+        let state = Immutable.toState(["shopping_cart": ["items": ["eggs", "milk"], "total": 5]])
+        let native = Immutable.fromState(state) as! [String:Any?]
+        let cart = native["shopping_cart"] as! [String:Any?]
+        let items = cart["items"] as! [Any?]
+        XCTAssertEqual(5, cart["total"] as! Int, "")
+        XCTAssertEqual("eggs", items[0] as! String, "")
+        XCTAssertEqual("milk", items[1] as! String, "")
+    }
+    
+    func testConvertBackFromArray() {
+        let state = Immutable.convertArray([0, 1, 2, 3])
+        let native = Immutable.convertArrayBack(state)
+        XCTAssertEqual(4, native.count, "There should be 4 items in the round-tripped array")
+        for var i = 0; i < 3; i++ {
+            XCTAssertEqual(i, native[i] as! Int, "")
+        }
+    }
+    
+    func testConvertBackFromMap() {
+        let state = Immutable.convertMap(["hello":"world", "eggs":12])
+        let native = Immutable.convertMapBack(state)
+        XCTAssertEqual(2, native.count, "There should be 2 items in the round-tripped array")
+        XCTAssertEqual("world", native["hello"] as! String, "")
+        XCTAssertEqual(12, native["eggs"] as! Int, "")
+    }
+    
     // Test comparison by tag, and marking as dirty
     func testTaggingAndMarkAsDirty() {
         let a = Immutable.State.Value(5, 2)
@@ -66,6 +94,13 @@ class ImmutableTests: XCTestCase {
         let expected = "(Array [(Value), (Value)])"
         
         XCTAssertEqual(expected, stateRep.description(), "")
+        
+        let b = [1, 2, 3]
+        let stateRep2 = Immutable.toState(b)
+        
+        let expected2 = "(Array [(Value), (Value), (Value)])"
+        
+        XCTAssertEqual(expected2, stateRep2.description(), "")
     }
     
     // Test helper functions that convert to state
