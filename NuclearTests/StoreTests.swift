@@ -56,8 +56,7 @@ class StoreTests: XCTestCase {
         let experiments = [exp1, exp2, exp3]
         let newState = store.handle(initial, action: "addExperiments", payload: experiments)
         let results = newState.getIn(["experiments"])
-        let count = (results.toSwift() as! [Any?]).count
-        XCTAssertEqual(3, count, "We should have inserted 3 experiments")
+        XCTAssertEqual(3, results.count, "We should have inserted 3 experiments")
         XCTAssertTrue(results.getIn([0]) === experiments[0], "")
         XCTAssertTrue(results.getIn([1]) === experiments[1], "")
         XCTAssertTrue(results.getIn([2]) === experiments[2], "")
@@ -70,8 +69,7 @@ class StoreTests: XCTestCase {
         let finalState = store.handle(newState, action: "removeExperiment", payload: 2)
         
         let results = finalState.getIn(["experiments"])
-        let count = (results.toSwift() as! [Any?]).count
-        XCTAssertEqual(2, count, "We should have inserted 3 experiments and removed 1")
+        XCTAssertEqual(2, results.count, "We should have inserted 3 experiments and removed 1")
         XCTAssertTrue(results.getIn([0]) === exp1, "We should not have removed the first one")
         XCTAssertTrue(results.getIn([1]) === exp3, "We should have removed the second one")
     }

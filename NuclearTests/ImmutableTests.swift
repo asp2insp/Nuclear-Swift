@@ -23,13 +23,16 @@ class ImmutableTests: XCTestCase {
         XCTAssertTrue(state.getIn(["a", 2]) === state.getIn(["a", 2]), "Identity failed on None")
         
         // Test replace
+        state = state.setIn(["b", 10], withValue: Immutable.toState(30))
         let oldValue = state.getIn(["a", 5])
         let oldRoot = state
         let oldArray = state.getIn(["a"])
+        let oldUntouched = state.getIn(["b", 10])
         state = state.setIn(["a", 5], withValue: Immutable.toState(88))
         XCTAssertFalse(oldValue === state.getIn(["a", 5]), "Updated value should have different tag")
         XCTAssertFalse(oldArray === state.getIn(["a"]), "Array with updated child should have different tag")
         XCTAssertFalse(oldRoot === state, "Map with updated child should have different tag")
+        XCTAssertTrue(oldUntouched === state.getIn(["b", 10]), "")
     }
     
     

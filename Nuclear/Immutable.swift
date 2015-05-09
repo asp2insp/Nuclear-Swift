@@ -289,14 +289,27 @@ public class Immutable {
     // Generate a new tag for the state to mark it as changed
     static func markAsDirty(state: State) -> State {
         switch state {
-        case .Value(let a, let tag):
+        case .Value(let a, _):
             return .Value(a, Tag.nextTag())
-        case .Map(let a, let tag):
+        case .Map(let a, _):
             return .Map(a, Tag.nextTag())
-        case .Array(let a, let tag):
+        case .Array(let a, _):
             return .Array(a, Tag.nextTag())
         case .None:
             return .None
+        }
+    }
+    
+    static func count(state: State) -> Int {
+        switch state {
+        case .Value:
+            return 1
+        case .Map(let m, _):
+            return m.count
+        case .Array(let a, _):
+            return a.count
+        case .None:
+            return 0
         }
     }
 }
@@ -332,6 +345,10 @@ extension Immutable.State {
     
     func push(val: Immutable.State) -> Immutable.State {
         return Immutable.push(self, newVal: val)
+    }
+    
+    var count : Int {
+        return Immutable.count(self)
     }
     
     // Allow us to print the state for debugging

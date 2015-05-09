@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FE216C7E1AFE9CE600C3C3D0 /* Reactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE216C7D1AFE9CE600C3C3D0 /* Reactor.swift */; };
+		FE216C801AFEA1C500C3C3D0 /* ReactorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE216C7F1AFEA1C500C3C3D0 /* ReactorTests.swift */; };
+		FE216C811AFEA4AC00C3C3D0 /* Reactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE216C7D1AFE9CE600C3C3D0 /* Reactor.swift */; };
 		FE9BCD9E1AFD92170067FA16 /* EvaluatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9BCD9D1AFD92170067FA16 /* EvaluatorTests.swift */; };
 		FED4F7501AF71E1900699B89 /* Nuclear.h in Headers */ = {isa = PBXBuildFile; fileRef = FED4F74F1AF71E1900699B89 /* Nuclear.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FED4F7561AF71E1900699B89 /* Nuclear.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FED4F74A1AF71E1900699B89 /* Nuclear.framework */; };
@@ -34,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FE216C7D1AFE9CE600C3C3D0 /* Reactor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reactor.swift; sourceTree = "<group>"; };
+		FE216C7F1AFEA1C500C3C3D0 /* ReactorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactorTests.swift; sourceTree = "<group>"; };
 		FE9BCD9D1AFD92170067FA16 /* EvaluatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EvaluatorTests.swift; sourceTree = "<group>"; };
 		FED4F74A1AF71E1900699B89 /* Nuclear.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Nuclear.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FED4F74E1AF71E1900699B89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -95,6 +100,7 @@
 				FED4F76B1AF8572100699B89 /* Getter.swift */,
 				FED4F79E1AF8807C00699B89 /* Evaluator.swift */,
 				FED4F7A11AF8838300699B89 /* Immutable.swift */,
+				FE216C7D1AFE9CE600C3C3D0 /* Reactor.swift */,
 			);
 			path = Nuclear;
 			sourceTree = "<group>";
@@ -115,6 +121,7 @@
 				FED4F7681AF729D600699B89 /* StoreTests.swift */,
 				FED4F7A41AF9274E00699B89 /* ImmutableTests.swift */,
 				FE9BCD9D1AFD92170067FA16 /* EvaluatorTests.swift */,
+				FE216C7F1AFEA1C500C3C3D0 /* ReactorTests.swift */,
 			);
 			path = NuclearTests;
 			sourceTree = "<group>";
@@ -238,6 +245,7 @@
 				FED4F7671AF71F5B00699B89 /* Store.swift in Sources */,
 				FED4F7A21AF8838300699B89 /* Immutable.swift in Sources */,
 				FED4F79F1AF8807C00699B89 /* Evaluator.swift in Sources */,
+				FE216C7E1AFE9CE600C3C3D0 /* Reactor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,9 +253,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE216C801AFEA1C500C3C3D0 /* ReactorTests.swift in Sources */,
 				FED4F7A01AF8807C00699B89 /* Evaluator.swift in Sources */,
 				FED4F76A1AF744FC00699B89 /* Store.swift in Sources */,
 				FED4F75D1AF71E1900699B89 /* NuclearTests.swift in Sources */,
+				FE216C811AFEA4AC00C3C3D0 /* Reactor.swift in Sources */,
 				FED4F76D1AF8572100699B89 /* Getter.swift in Sources */,
 				FED4F7A31AF8838300699B89 /* Immutable.swift in Sources */,
 				FE9BCD9E1AFD92170067FA16 /* EvaluatorTests.swift in Sources */,
