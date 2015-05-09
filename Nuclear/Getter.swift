@@ -8,42 +8,21 @@
 
 import Foundation
 
-public typealias Compute = (Any...) -> Any
-
-let IDENTITY = {(x: Any...) -> Any in
-    return x
+let IDENTITY = {(args: [Immutable.State]) -> Immutable.State in
+    return args[0]
 }
 
-public enum SimpleDep {
-    case Name(String)
-    case Index(Int)
-}
-
-public enum Dep {
-    case Simple(SimpleDep)
-    case Recursive([Dep])
-    case Func(Compute)
-}
-
-public typealias Getter = [Dep]
-
-public func fromKeyPath(keyPath: Getter) -> Getter {
-    var getter = keyPath
-    getter.append(Dep.Func(IDENTITY))
-    return getter
-}
-
-// A getter is either a full getter (with function)
-// or a keypath (no function)
-public func isGetter(toTest: Getter) -> Bool {
-    switch toTest[-1] {
-    case .Func:
-        return true
-    default:
-        return false
+class Getter {
+    let keyPath : [AnyObject]
+    let compute : ([Immutable.State]) -> Immutable.State
+    
+    init (keyPath: [AnyObject]) {
+        self.keyPath = keyPath
+        self.compute = IDENTITY
     }
-}
-
-public func isKeyPath(toTest: Getter) -> Bool {
-    return !isGetter(toTest)
+    
+    init (keyPath: [AnyObject], withFunc: ([Immutable.State]) -> Immutable.State) {
+        self.keyPath = keyPath
+        self.compute = withFunc
+    }
 }

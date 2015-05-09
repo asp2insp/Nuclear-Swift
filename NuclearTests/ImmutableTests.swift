@@ -15,6 +15,23 @@ class ImmutableTests: XCTestCase {
         super.setUp()
     }
     
+    // Test dirty marks
+    func testSetInMarksAsDirty() {
+        var state = Immutable.toState([:])
+        state = state.setIn(["a", 5], withValue: Immutable.toState(75))
+        XCTAssertTrue(state.getIn(["a", 5]) === state.getIn(["a", 5]), "Identity failed on same value")
+        XCTAssertTrue(state.getIn(["a", 2]) === state.getIn(["a", 2]), "Identity failed on None")
+        
+        // Test replace
+        let oldValue = state.getIn(["a", 5])
+        let oldRoot = state
+        let oldArray = state.getIn(["a"])
+        state = state.setIn(["a", 5], withValue: Immutable.toState(88))
+        XCTAssertFalse(oldValue === state.getIn(["a", 5]), "Updated value should have different tag")
+        XCTAssertFalse(oldArray === state.getIn(["a"]), "Array with updated child should have different tag")
+        XCTAssertFalse(oldRoot === state, "Map with updated child should have different tag")
+    }
+    
     
     // Test mutators
     func testSetIn() {
@@ -23,10 +40,37 @@ class ImmutableTests: XCTestCase {
         XCTAssertEqual("(Map {a : (Array [(Map {b : (Value)})])})", state.description(), "")
         XCTAssertEqual("Hello!", Immutable.fromState(state.getIn(["a", 0, "b"])) as! String, "")
         
-        // Test auto increment
+        // Test auto fill arrays increment
         state = state.setIn(["a", 5], withValue: Immutable.toState(75))
         XCTAssertEqual("(Map {a : (Array [(Map {b : (Value)}), (None), (None), (None), (None), (Value)])})", state.description(), "")
         XCTAssertEqual(75, Immutable.fromState(state.getIn(["a", 5])) as! Int, "")
+        
+        // Test replace
+        state = state.setIn(["a", 5], withValue: Immutable.toState(88))
+        XCTAssertEqual(88, Immutable.fromState(state.getIn(["a", 5])) as! Int, "")
+    }
+    
+    // Test mapping transformation
+    func testMap() {
+        let state = Immutable.toState([0, 1, 2, 3, 4, 5])
+        let plusThree = state.map({(int, index) in
+            return Immutable.toState(int.toSwift() as! Int + 3)
+        })
+        let native = plusThree.toSwift() as! [Any?]
+        for var i = 0; i < 5; i++ {
+            XCTAssertEqual(i+3, native[i] as! Int, "")
+        }
+    }
+    
+    // Test reducing transformation
+    func testReduce() {
+        let state = Immutable.toState([0, 1, 2, 3, 4, 5])
+        let summed = state.reduce(Immutable.toState(0), f: {(sum, one)  in
+            let a = sum.toSwift() as! Int
+            let b = one.toSwift() as! Int
+            return Immutable.toState(a + b)
+        })
+        XCTAssertEqual(15, summed.toSwift() as! Int, "")
     }
     
     // Test helper functions that convert back from state

@@ -71,6 +71,8 @@ public class Immutable {
         return asState
     }
     
+    // Convert from an immutable state object to a vanilla swift object
+    // fromState converts deeply
     public static func fromState(state: State?) -> Any? {
         switch state {
         case .Some(let someState):
@@ -202,6 +204,50 @@ public class Immutable {
         fatalError("Your keypath contains something other than strings and integer indices")
     }
     
+    // Apply the given function to all
+    static func mapOver(state: State, f: (Immutable.State, AnyObject) -> Immutable.State) -> State {
+        switch state {
+        case .None:
+            return f(state, -1)
+        case .Value:
+            return markAsDirty(f(state, -1))
+        case .Map(let m, let tag):
+            var map : [String:State] = [:]
+            for (key, val) in m {
+                map[key] = markAsDirty(f(val, key))
+            }
+            return .Map(map, Tag.nextTag())
+        case .Array(let a, let tag):
+            var array : [State] = []
+            for var i = 0; i < a.count; i++ {
+                array.append(markAsDirty(f(a[i], i)))
+            }
+            return .Array(array, Tag.nextTag())
+        }
+    }
+    
+    // Reduce the given state
+    static func reduceOver(state: State, f: (State, State) -> State, initial: State) -> State {
+        switch state {
+        case .None:
+            return .None
+        case .Value:
+            return markAsDirty(f(initial, state))
+        case .Map(let m, let tag):
+            var current = initial
+            for (key, val) in m {
+                current = f(current, val)
+            }
+            return markAsDirty(current)
+        case .Array(let a, let tag):
+            var current = initial
+            for var i = 0; i < a.count; i++ {
+                current = f(current, a[i])
+            }
+            return markAsDirty(current)
+        }
+    }
+    
     // Generate a new tag for the state to mark it as changed
     static func markAsDirty(state: State) -> State {
         switch state {
@@ -222,12 +268,20 @@ extension Immutable.State {
         return Immutable.fromState(self)
     }
     
-    func getIn(keyPath: [AnyObject]) -> Immutable.State? {
+    func getIn(keyPath: [AnyObject]) -> Immutable.State {
         return Immutable.getIn(self, keyPath: keyPath)
     }
     
     func setIn(keyPath: [AnyObject], withValue: Immutable.State?) -> Immutable.State {
         return Immutable.setIn(self, forKeyPath: keyPath, withValue: withValue)
+    }
+    
+    func map(f: (Immutable.State, AnyObject) -> Immutable.State) -> Immutable.State {
+        return Immutable.mapOver(self, f: f)
+    }
+    
+    func reduce(initial: Immutable.State, f: (initial: Immutable.State, next: Immutable.State) -> Immutable.State) -> Immutable.State {
+        return Immutable.reduceOver(self, f: f, initial: initial)
     }
     
     // Allow us to print the state for debugging
