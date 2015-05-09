@@ -48,6 +48,8 @@ public class Immutable {
     // Convert a native swift nested object to a nested immutable state
     public static func toState(x: AnyObject) -> State {
         switch x {
+        case let alreadyState as State:
+            return alreadyState
         case let someArray as [AnyObject]:
             return State.Array(convertArray(someArray), Tag.nextTag())
         case let someMap as [String:AnyObject]:
@@ -226,6 +228,27 @@ public class Immutable {
         }
     }
     
+    // Filter by the given predicate
+    static func filterOver(state: State, f: (Immutable.State) -> Bool) -> State {
+        switch state {
+        case .None:
+            return .None
+        case .Value:
+            return f(state) ? state : .None
+        case .Map(let m, let tag):
+            var map : [String:State] = [:]
+            for (key, val) in m {
+                if (f(val)) {
+                    map[key] = val
+                }
+            }
+            return .Map(map, Tag.nextTag())
+        case .Array(let a, let tag):
+            let array = a.filter(f)
+            return .Array(array, Tag.nextTag())
+        }
+    }
+    
     // Reduce the given state
     static func reduceOver(state: State, f: (State, State) -> State, initial: State) -> State {
         switch state {
@@ -245,6 +268,21 @@ public class Immutable {
                 current = f(current, a[i])
             }
             return markAsDirty(current)
+        }
+    }
+    
+    // Push the given item. Only valid for arrays
+    static func push(state: State, newVal: State) -> State {
+        switch state {
+        case .None:
+            return .None
+        case .Value:
+            return state
+        case .Map:
+            return state
+        case .Array(var a, let tag):
+            a.append(newVal)
+            return .Array(a, Tag.nextTag())
         }
     }
     
@@ -276,12 +314,24 @@ extension Immutable.State {
         return Immutable.setIn(self, forKeyPath: keyPath, withValue: withValue)
     }
     
+    func mutateIn(keyPath: [AnyObject], withMutator: (Immutable.State?) -> Immutable.State) -> Immutable.State {
+        return Immutable.mutateIn(self, atKeyPath: keyPath, mutator: withMutator)
+    }
+    
     func map(f: (Immutable.State, AnyObject) -> Immutable.State) -> Immutable.State {
         return Immutable.mapOver(self, f: f)
     }
     
+    func filter(predicate: (Immutable.State) -> Bool) -> Immutable.State {
+        return Immutable.filterOver(self, f: predicate)
+    }
+    
     func reduce(initial: Immutable.State, f: (initial: Immutable.State, next: Immutable.State) -> Immutable.State) -> Immutable.State {
         return Immutable.reduceOver(self, f: f, initial: initial)
+    }
+    
+    func push(val: Immutable.State) -> Immutable.State {
+        return Immutable.push(self, newVal: val)
     }
     
     // Allow us to print the state for debugging
