@@ -117,16 +117,18 @@ public class Immutable {
         switch state {
         case let .Array(array, tag):
             if let index = key as? Int {
-                return getIn(array[index], keyPath: Array(dropFirst(keyPath)))
-            } else {
-                return .None
+                if index < array.count {
+                    return self.getIn(array[index], keyPath: Array(dropFirst(keyPath)))
+                }
             }
+            return .None
         case let .Map(map, tag):
             if let name = key as? String {
-                return getIn(map[name]!, keyPath: Array(dropFirst(keyPath))) ?? .None
-            } else {
-                return .None
+                if let val = map[name] {
+                    return getIn(val, keyPath: Array(dropFirst(keyPath)))
+                }
             }
+            return .None
         default:
             return .None
         }
