@@ -11,6 +11,7 @@ import Foundation
 public class Reactor {
     public static let instance = Reactor()
     
+    var debug : Bool = false
     var stateMap = Immutable.toState([:])
     var stores : [String:Store] = [:]
     
@@ -22,12 +23,17 @@ public class Reactor {
             let newState = store.handle(prevState, action: action, payload: payload)
             self.stateMap = self.stateMap.setIn([id], withValue: newState)
         }
+        if self.debug {
+            NSLog("Reacting to \(action)")
+        }
+        self.responder?.onUpdate()
     }
     
     // Add a new store to the reactor
     func registerStore(id: String, store: Store) {
         self.stores[id] = store
         self.stateMap = self.stateMap.setIn([id], withValue: store.getInitialState())
+        self.responder?.onUpdate()
     }
     
     // Restore all registered stores to their initial state
@@ -37,6 +43,7 @@ public class Reactor {
             let resetState = store.handleReset(prevState)
             self.stateMap = self.stateMap.setIn([id], withValue: resetState)
         }
+        self.responder?.onUpdate()
     }
     
     // Evaluate the given getter and return the immutable state
@@ -50,6 +57,12 @@ public class Reactor {
     }
     
     // TODO Add binding
+    var responder : ReactorResponder?
+    
     // TODO Add autobinding
     // TODO Add caching for autobinding
+}
+
+public protocol ReactorResponder {
+    func onUpdate()
 }
