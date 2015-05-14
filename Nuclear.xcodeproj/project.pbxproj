@@ -24,6 +24,11 @@
 		FED4F7A21AF8838300699B89 /* Immutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7A11AF8838300699B89 /* Immutable.swift */; };
 		FED4F7A31AF8838300699B89 /* Immutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7A11AF8838300699B89 /* Immutable.swift */; };
 		FED4F7A61AF9274E00699B89 /* ImmutableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED4F7A41AF9274E00699B89 /* ImmutableTests.swift */; };
+		FEEE5D121B04EBF3009C1280 /* ChangeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE5D111B04EBF3009C1280 /* ChangeObserver.swift */; };
+		FEEE5D131B04FAA9009C1280 /* ChangeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE5D111B04EBF3009C1280 /* ChangeObserver.swift */; };
+		FEEE5D151B04FDCF009C1280 /* ChangeObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE5D141B04FDCF009C1280 /* ChangeObserverTests.swift */; };
+		FEEE5D171B0502D3009C1280 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE5D161B0502D3009C1280 /* Tag.swift */; };
+		FEEE5D181B05032A009C1280 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE5D161B0502D3009C1280 /* Tag.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +57,9 @@
 		FED4F79E1AF8807C00699B89 /* Evaluator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Evaluator.swift; sourceTree = "<group>"; };
 		FED4F7A11AF8838300699B89 /* Immutable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Immutable.swift; sourceTree = "<group>"; };
 		FED4F7A41AF9274E00699B89 /* ImmutableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImmutableTests.swift; sourceTree = "<group>"; };
+		FEEE5D111B04EBF3009C1280 /* ChangeObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeObserver.swift; sourceTree = "<group>"; };
+		FEEE5D141B04FDCF009C1280 /* ChangeObserverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeObserverTests.swift; sourceTree = "<group>"; };
+		FEEE5D161B0502D3009C1280 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +108,9 @@
 				FED4F76B1AF8572100699B89 /* Getter.swift */,
 				FED4F79E1AF8807C00699B89 /* Evaluator.swift */,
 				FED4F7A11AF8838300699B89 /* Immutable.swift */,
+				FEEE5D111B04EBF3009C1280 /* ChangeObserver.swift */,
 				FE216C7D1AFE9CE600C3C3D0 /* Reactor.swift */,
+				FEEE5D161B0502D3009C1280 /* Tag.swift */,
 			);
 			path = Nuclear;
 			sourceTree = "<group>";
@@ -122,6 +132,7 @@
 				FED4F7A41AF9274E00699B89 /* ImmutableTests.swift */,
 				FE9BCD9D1AFD92170067FA16 /* EvaluatorTests.swift */,
 				FE216C7F1AFEA1C500C3C3D0 /* ReactorTests.swift */,
+				FEEE5D141B04FDCF009C1280 /* ChangeObserverTests.swift */,
 			);
 			path = NuclearTests;
 			sourceTree = "<group>";
@@ -244,6 +255,8 @@
 				FED4F76C1AF8572100699B89 /* Getter.swift in Sources */,
 				FED4F7671AF71F5B00699B89 /* Store.swift in Sources */,
 				FED4F7A21AF8838300699B89 /* Immutable.swift in Sources */,
+				FEEE5D171B0502D3009C1280 /* Tag.swift in Sources */,
+				FEEE5D121B04EBF3009C1280 /* ChangeObserver.swift in Sources */,
 				FED4F79F1AF8807C00699B89 /* Evaluator.swift in Sources */,
 				FE216C7E1AFE9CE600C3C3D0 /* Reactor.swift in Sources */,
 			);
@@ -262,7 +275,10 @@
 				FED4F7A31AF8838300699B89 /* Immutable.swift in Sources */,
 				FE9BCD9E1AFD92170067FA16 /* EvaluatorTests.swift in Sources */,
 				FED4F7691AF729D600699B89 /* StoreTests.swift in Sources */,
+				FEEE5D151B04FDCF009C1280 /* ChangeObserverTests.swift in Sources */,
 				FED4F7A61AF9274E00699B89 /* ImmutableTests.swift in Sources */,
+				FEEE5D131B04FAA9009C1280 /* ChangeObserver.swift in Sources */,
+				FEEE5D181B05032A009C1280 /* Tag.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

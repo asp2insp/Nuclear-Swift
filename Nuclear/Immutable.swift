@@ -9,17 +9,7 @@
 import Foundation
 
 public class Immutable {
-    // Each state is tagged with a unique ID (implemented as simple monotonically
-    // increasing integer)
-    class Tag {
-        static var val : UInt = 0
-        class func nextTag() -> UInt {
-            if val == UInt.max {
-                fatalError("RAN OUT OF IDS")
-            }
-            return ++val
-        }
-    }
+    static let tagger = Tag()
     
     // A State in its simplest form is a recursively defined
     // map. It can contain primitive data, and arrays or maps
@@ -31,7 +21,7 @@ public class Immutable {
         case Value(AnyObject?, UInt)
         case None
         
-        var hashValue : Int {
+        public var hashValue : Int {
             switch self {
             case .Array(let _, let tag):
                 return Int(tag)
@@ -51,11 +41,11 @@ public class Immutable {
         case let alreadyState as State:
             return alreadyState
         case let someArray as [AnyObject]:
-            return State.Array(convertArray(someArray), Tag.nextTag())
+            return State.Array(convertArray(someArray), tagger.nextTag())
         case let someMap as [String:AnyObject]:
-            return State.Map(convertMap(someMap), Tag.nextTag())
+            return State.Map(convertMap(someMap), tagger.nextTag())
         default:
-            return State.Value(x, Tag.nextTag())
+            return State.Value(x, tagger.nextTag())
         }
     }
     
@@ -164,14 +154,14 @@ public class Immutable {
                         array.append(State.None)
                     }
                     array[index] = mutateIn(array[index], atKeyPath: rest, mutator: mutator)
-                    return State.Array(array, Tag.nextTag())
+                    return State.Array(array, tagger.nextTag())
                 } else {
                     fatalError("Tried to set a named key inside an array. Check your keypath")
                 }
             case var .Map(map, tag):
                 if let name = key as? String {
                     map[name] = mutateIn(map[name], atKeyPath: rest, mutator: mutator)
-                    return State.Map(map, Tag.nextTag())
+                    return State.Map(map, tagger.nextTag())
                 } else {
                     fatalError("Tried to set an index key inside a map. Check your keypath")
                 }
@@ -199,11 +189,11 @@ public class Immutable {
                 array.append(State.None)
             }
             array.append(createIn(rest, generator: generator))
-            return State.Array(array, Tag.nextTag())
+            return State.Array(array, tagger.nextTag())
         } else if let name = key as? String {
             var map : [String:State] = [:]
             map[name] = createIn(rest, generator: generator)
-            return State.Map(map, Tag.nextTag())
+            return State.Map(map, tagger.nextTag())
         }
         fatalError("Your keypath contains something other than strings and integer indices")
     }
@@ -220,13 +210,13 @@ public class Immutable {
             for (key, val) in m {
                 map[key] = markAsDirty(f(val, key))
             }
-            return .Map(map, Tag.nextTag())
+            return .Map(map, tagger.nextTag())
         case .Array(let a, let tag):
             var array : [State] = []
             for var i = 0; i < a.count; i++ {
                 array.append(markAsDirty(f(a[i], i)))
             }
-            return .Array(array, Tag.nextTag())
+            return .Array(array, tagger.nextTag())
         }
     }
     
@@ -244,10 +234,10 @@ public class Immutable {
                     map[key] = val
                 }
             }
-            return .Map(map, Tag.nextTag())
+            return .Map(map, tagger.nextTag())
         case .Array(let a, let tag):
             let array = a.filter(f)
-            return .Array(array, Tag.nextTag())
+            return .Array(array, tagger.nextTag())
         }
     }
     
@@ -284,7 +274,7 @@ public class Immutable {
             return state
         case .Array(var a, let tag):
             a.append(newVal)
-            return .Array(a, Tag.nextTag())
+            return .Array(a, tagger.nextTag())
         }
     }
     
@@ -292,11 +282,11 @@ public class Immutable {
     static func markAsDirty(state: State) -> State {
         switch state {
         case .Value(let a, _):
-            return .Value(a, Tag.nextTag())
+            return .Value(a, tagger.nextTag())
         case .Map(let a, _):
-            return .Map(a, Tag.nextTag())
+            return .Map(a, tagger.nextTag())
         case .Array(let a, _):
-            return .Array(a, Tag.nextTag())
+            return .Array(a, tagger.nextTag())
         case .None:
             return .None
         }
