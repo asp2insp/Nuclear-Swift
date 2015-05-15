@@ -67,4 +67,21 @@ class ChangeObserverTests: XCTestCase {
         reactor.dispatch("setB", payload: "Hi")
         XCTAssertEqual(2, handleCount, "Parent + Getter, but not sibling")
     }
+    
+    func testUnregisterMultiple() {
+        let handler = {(state: Immutable.State) -> () in
+            handleCount++
+        }
+        let a = reactor.observe(getter, handler: handler)
+        let b = reactor.observe(parentGetter, handler: handler)
+        
+        reactor.dispatch("setB", payload: "Hi")
+        
+        XCTAssertEqual(2, handleCount, "Both")
+        
+        reactor.unobserve(a, b)
+    
+        reactor.dispatch("setB", payload: "Hi")
+        XCTAssertEqual(2, handleCount, "Neither")
+    }
 }

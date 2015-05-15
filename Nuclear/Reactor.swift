@@ -41,12 +41,17 @@ public class Reactor {
         self.changeObserver.notifyObservers(self.stateMap)
     }
     
+    // Observe the given getter. The result of the getter will be passed
+    // to the handler, which will be invoked every time there's a new value.
     func observe(getter: Getter, handler: ((Immutable.State) -> ())) -> UInt {
         return self.changeObserver.onChange(getter, handler: handler)
     }
     
-    func unobserve(id : UInt) {
-        self.changeObserver.removeHandler(id)
+    // Unobserve the handlers bound to the given IDs.
+    func unobserve(ids : UInt...) {
+        for id in ids {
+            self.changeObserver.removeHandler(id)
+        }
     }
     
     // Restore all registered stores to their initial state
