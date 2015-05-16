@@ -117,6 +117,12 @@ public class Immutable {
                 if let val = map[name] {
                     return getIn(val, keyPath: Array(dropFirst(keyPath)))
                 }
+            } else if let index = key as? Int {
+                if index < map.count {
+                    var iter = advance(map.startIndex, index)
+                    let (_, next) = map[iter]
+                    return getIn(next, keyPath: Array(dropFirst(keyPath)))
+                }
             }
             return .None
         default:
