@@ -15,6 +15,28 @@ class ImmutableTests: XCTestCase {
         super.setUp()
     }
     
+    // Test contains
+    func testContainsValueArray() {
+        let state = Immutable.toState([0, 1, 2, 3, "true", false, 5])
+        XCTAssertTrue(state.containsValue(3), "")
+        XCTAssertTrue(state.containsValue("true"), "")
+        XCTAssertTrue(state.containsValue(false), "")
+        XCTAssertFalse(state.containsValue(-1), "")
+    }
+    
+    func testContainsValueMap() {
+        let state = Immutable.toState(["items": ["eggs", "milk"], "total": 5])
+        XCTAssertTrue(state.containsValue(5), "")
+        XCTAssertFalse(state.containsValue("items"), "")
+    }
+    
+    func testContainsKeyMap() {
+        let state = Immutable.toState(["items": ["eggs", "milk"], "total": 5])
+        XCTAssertTrue(state.containsKey("items"), "")
+        XCTAssertTrue(state.containsKey("total"), "")
+        XCTAssertFalse(state.containsKey("hello"), "")
+    }
+    
     // Test dirty marks
     func testSetInMarksAsDirty() {
         var state = Immutable.toState([:])

@@ -310,6 +310,50 @@ public class Immutable {
             return 0
         }
     }
+    
+    
+    static func containsKey(state: State, key: String) -> Bool {
+        switch state {
+        case .Map(let m, _):
+            return m[key] != nil
+        default:
+            return false
+        }
+    }
+    
+    static func equals<T : Equatable>(state: State, value: T) -> Bool {
+        switch state {
+        case .Value(let v as T, _):
+            return v == value
+        default:
+            return false
+        }
+    }
+    
+    static func containsValue<T : Equatable>(state: State, value: T) -> Bool {
+        switch state {
+        case .Value(let v as T, _):
+            return v == value
+        case .Map(let m, _):
+            for (key, val) in m {
+                if val.equals(value) {
+                    return true
+                }
+            }
+            return false
+        case .Array(let a, _):
+            for val in a {
+                if val.equals(value) {
+                    return true
+                }
+            }
+            return false
+        case .None:
+            return false
+        default:
+            return false
+        }
+    }
 }
 
 extension Immutable.State {
@@ -347,6 +391,18 @@ extension Immutable.State {
     
     var count : Int {
         return Immutable.count(self)
+    }
+    
+    func containsKey(key: String) -> Bool {
+        return Immutable.containsKey(self, key: key)
+    }
+    
+    func containsValue<T : Equatable>(value: T) -> Bool {
+        return Immutable.containsValue(self, value: value)
+    }
+    
+    func equals<T : Equatable>(value: T) -> Bool {
+        return Immutable.equals(self, value: value)
     }
     
     // Allow us to print the state for debugging
