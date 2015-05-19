@@ -13,10 +13,10 @@ let IDENTITY = {(args: [Immutable.State]) -> Immutable.State in
 }
 
 public class Getter : Hashable, Equatable {
-    static let tagger = Tag()
-    let keyPath : [AnyObject]
-    let compute : ([Immutable.State]) -> Immutable.State
-    var id : UInt
+    private static let tagger = Tag()
+    private let keyPath : [AnyObject]
+    private let compute : ([Immutable.State]) -> Immutable.State
+    private var id : UInt
     
     init (keyPath: [AnyObject]) {
         self.keyPath = keyPath
@@ -37,6 +37,14 @@ public class Getter : Hashable, Equatable {
             hash = ((hash << 5) + hash) + (key.hashValue ?? 33)
         }
         return hash
+    }
+    
+    public var name : String {
+        return "Getter\(self.hashValue)"
+    }
+    
+    public var nameForNSNotification : String {
+         return "\(self.name)HasChanged"
     }
 }
 

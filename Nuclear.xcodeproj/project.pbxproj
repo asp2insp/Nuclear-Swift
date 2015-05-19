@@ -102,8 +102,8 @@
 		FED4F74C1AF71E1900699B89 /* Nuclear */ = {
 			isa = PBXGroup;
 			children = (
-				FED4F74F1AF71E1900699B89 /* Nuclear.h */,
 				FED4F74D1AF71E1900699B89 /* Supporting Files */,
+				FED4F74F1AF71E1900699B89 /* Nuclear.h */,
 				FED4F7661AF71F5B00699B89 /* Store.swift */,
 				FED4F76B1AF8572100699B89 /* Getter.swift */,
 				FED4F79E1AF8807C00699B89 /* Evaluator.swift */,

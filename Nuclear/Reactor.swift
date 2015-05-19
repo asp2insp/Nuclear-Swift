@@ -9,12 +9,10 @@
 import Foundation
 
 public class Reactor {
-    public static let instance = Reactor()
-    
-    var debug : Bool = false
-    var stateMap = Immutable.toState([:])
-    var stores : [String:Store] = [:]
-    var changeObserver : ChangeObserver!
+    public var debug : Bool = false
+    private var stateMap = Immutable.toState([:])
+    private var stores : [String:Store] = [:]
+    private var changeObserver : ChangeObserver!
     
     init() {
         changeObserver = ChangeObserver(reactor: self)

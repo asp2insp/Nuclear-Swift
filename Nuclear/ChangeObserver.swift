@@ -20,7 +20,6 @@ public class ChangeObserver {
         self.reactor = reactor
     }
     
-    // TODO: look into replacing this with NSNotificationCenter
     func notifyObservers(newState: Immutable.State) {
         for (getter, handlers) in observers {
             let newValue = reactor.evaluate(getter)
@@ -33,7 +32,13 @@ public class ChangeObserver {
                 if reactor.debug { NSLog("Handler #\(id) firing") }
                 handler(newValue)
             }
+           
         }
+    }
+    
+    private func postNotificationForGetter(getter: Getter, newState: Immutable.State) {
+        let notification = NSNotification(name: getter.nameForNSNotification, object: nil)
+        NSNotificationCenter.defaultCenter().postNotification(notification)
     }
     
     func onChange(getter: Getter, handler: ((Immutable.State) -> ())) -> UInt {
