@@ -13,7 +13,9 @@ class ChangeObserverTests: XCTestCase {
     
     class TestStore : Store {
         override func getInitialState() -> Immutable.State {
-            return Immutable.toState([:])
+            return Immutable.toState([
+                "a": ["b": 2, "c": 0],
+            ])
         }
         
         override func initialize() {
@@ -22,7 +24,7 @@ class ChangeObserverTests: XCTestCase {
             })
         }
     }
-    let reactor = Reactor.instance
+    let reactor = Reactor()
     let getter = Getter(keyPath: ["store", "a", "b"])
     let parentGetter = Getter(keyPath: ["store", "a"])
     let siblingGetter = Getter(keyPath: ["store", "a", "c"])

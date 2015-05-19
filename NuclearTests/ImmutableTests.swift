@@ -127,14 +127,12 @@ class ImmutableTests: XCTestCase {
     }
     
     // Test comparison by tag, and marking as dirty
-    func testTaggingAndMarkAsDirty() {
+    func testTagging() {
         let a = Immutable.State.Value(5, 2)
         let b = Immutable.State.Value(5, 3)
         
         XCTAssertFalse(a === b, "States should be compared by tag not by value")
         XCTAssertTrue(a === a, "States should be self-identical")
-        
-        XCTAssertFalse(a === Immutable.markAsDirty(a), "Mark as dirty should update tag")
     }
 
     // Test deep conversion to state

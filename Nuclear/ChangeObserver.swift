@@ -13,7 +13,7 @@ public class ChangeObserver {
     var observers : [Getter:[UInt:((Immutable.State) -> ())]] = [:]
     
     // TODO: move this caching into Evaluator to match Nuclear-JS
-    var lastKnownStates : [Getter:Immutable.State] = [:]
+    var lastKnownStates : [Int:[Int]] = [:]
     var reactor : Reactor!
     
     init(reactor: Reactor) {
@@ -22,21 +22,44 @@ public class ChangeObserver {
     
     func notifyObservers(newState: Immutable.State) {
         for (getter, handlers) in observers {
-            let newValue = reactor.evaluate(getter)
-            if (lastKnownStates[getter] ?? Immutable.State.None) === newValue {
+            // We require that the getter compute function be pure, so if the inputs
+            // haven't changed, we don't re-run the getter
+            let newInputValueTags = currentTagsForGetter(getter)
+            let currentValues = lastKnownStates[getter.hashValue] ?? []
+            
+            if tagsEqual(currentValues, other: newInputValueTags) {
                 if reactor.debug { NSLog("No changes, skipping handlers") }
                 continue // If the state hasn't changed, no need to update
             }
-            lastKnownStates[getter] = newValue
+            lastKnownStates[getter.hashValue] = newInputValueTags
             for (id, handler) in handlers {
-                if reactor.debug { NSLog("Handler #\(id) firing") }
-                handler(newValue)
+                handler(reactor.evaluate(getter))
             }
-           
+            postNotificationForGetter(getter)
         }
     }
     
-    private func postNotificationForGetter(getter: Getter, newState: Immutable.State) {
+    private func tagsEqual(one: [Int], other: [Int]) -> Bool {
+        if one.count != other.count {
+            return false
+        }
+        for var i = 0; i < other.count; i++ {
+            if one[i] != other[i] {
+                return false
+            }
+        }
+        return true
+    }
+    
+    private func currentTagsForGetter(getter: Getter) -> [Int] {
+        var newInputValueTags : [Int] = getter.recursives.map({(g) -> Int in
+            return self.reactor.evaluate(g).hashValue
+        })
+        newInputValueTags.append(reactor.evaluate(getter.keysOnly).hashValue)
+        return newInputValueTags
+    }
+    
+    private func postNotificationForGetter(getter: Getter) {
         let notification = NSNotification(name: getter.nameForNSNotification, object: nil)
         NSNotificationCenter.defaultCenter().postNotification(notification)
     }
@@ -47,6 +70,7 @@ public class ChangeObserver {
         }
         let id = tagger.nextTag()
         self.observers[getter]![id] = handler
+        self.lastKnownStates[getter.hashValue] = currentTagsForGetter(getter)
         return id
     }
     
